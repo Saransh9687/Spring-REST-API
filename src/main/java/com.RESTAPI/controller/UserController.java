@@ -3,6 +3,7 @@ package com.RESTAPI.controller;
 import com.RESTAPI.dto.UserRequestDTO;
 import com.RESTAPI.dto.UserResponseDTO;
 import com.RESTAPI.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +23,16 @@ public class UserController {
         return "SERVER UP";
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
+
+        return ResponseEntity.ok(userService.getUser(id));
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> createUser(
-            @RequestBody UserRequestDTO dto) {
+            @RequestBody @Valid UserRequestDTO dto) {
 
         return ResponseEntity.ok(userService.createUser(dto));
     }

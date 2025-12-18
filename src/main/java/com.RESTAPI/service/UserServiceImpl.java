@@ -3,6 +3,8 @@ package com.RESTAPI.service;
 import com.RESTAPI.dto.UserRequestDTO;
 import com.RESTAPI.dto.UserResponseDTO;
 import com.RESTAPI.entity.User;
+import com.RESTAPI.exception.UserAlreadyExistsException;
+import com.RESTAPI.exception.UserNotFoundException;
 import com.RESTAPI.repo.UserRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
         User existing = userRepo.findByEmail(dto.getEmail());
         if (existing != null) {
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException("User already exists " + dto.getEmail());
         }
 
         User user = new User();
@@ -44,9 +46,26 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepo.findById(userId);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
 
         userRepo.delete(user);
     }
+
+    @Override
+    public UserResponseDTO getUser(Long userId) {
+
+        User user = userRepo.findById(userId);
+
+        if(user == null){
+            throw new UserNotFoundException("User not found with id: " + userId);
+        }
+
+        return new UserResponseDTO(
+                user.getUserid(),
+                user.getEmail(),
+                user.getUsername()
+        );
+    }
+
 }

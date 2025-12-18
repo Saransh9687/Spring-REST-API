@@ -6,4 +6,6 @@ import com.RESTAPI.dto.UserResponseDTO;
 public interface UserService {
     UserResponseDTO createUser(UserRequestDTO dto);
     void deleteUser(Long userId);
+    UserResponseDTO getUser(Long userId);
+
 }
